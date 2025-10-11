@@ -1,2 +1,1 @@
-# Mi Proyecto de practica
-## Descripcion del proyecto
+Im learning git and github
