@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TaskFlow Plus - Con Sistema de Guardado</title>
+    <title>TaskFlow Plus - Gestor Avanzado de Tareas</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -497,7 +497,7 @@
             gap: 25px;
         }
 
-        .categories-container, .upcoming-tasks, .backup-container {
+        .categories-container, .upcoming-tasks {
             padding: 25px;
         }
 
@@ -565,17 +565,6 @@
             font-weight: 500;
         }
 
-        .backup-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .backup-btn {
-            width: 100%;
-            justify-content: flex-start;
-        }
-
         .mobile-menu-btn {
             display: none;
             position: fixed;
@@ -591,6 +580,21 @@
             cursor: pointer;
             box-shadow: var(--box-shadow-lg);
             z-index: 100;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
         }
 
         .theme-toggle {
@@ -615,115 +619,6 @@
             background: rgba(255, 255, 255, 0.3);
             transform: rotate(30deg);
         }
-
-        .save-status {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background: var(--success);
-            color: white;
-            padding: 10px 20px;
-            border-radius: var(--border-radius);
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: var(--box-shadow);
-            z-index: 100;
-            transform: translateY(100px);
-            transition: transform 0.3s ease;
-        }
-
-        .save-status.show {
-            transform: translateY(0);
-        }
-
-        .save-status.saving {
-            background: var(--warning);
-        }
-
-        .save-status.error {
-            background: var(--danger);
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: var(--border-radius-lg);
-            box-shadow: var(--box-shadow-lg);
-            max-width: 500px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .modal-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--gray);
-        }
-
-        .modal-body {
-            margin-bottom: 20px;
-        }
-
-        .modal-footer {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-        }
-
-        .import-textarea {
-            width: 100%;
-            height: 200px;
-            padding: 15px;
-            border: 2px solid var(--gray-light);
-            border-radius: var(--border-radius);
-            font-family: monospace;
-            resize: vertical;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        .pulse {
-            animation: pulse 2s infinite;
-        }
     </style>
 </head>
 <body>
@@ -746,36 +641,13 @@
                     </ul>
                 </div>
             </div>
-
-            <div class="card">
-                <div class="backup-container">
-                    <h3 class="section-title"><i class="fas fa-database"></i> Guardado & Respaldo</h3>
-                    <div class="backup-actions">
-                        <button class="btn btn-outline backup-btn" id="exportBtn">
-                            <i class="fas fa-file-export"></i> Exportar Datos
-                        </button>
-                        <button class="btn btn-outline backup-btn" id="importBtn">
-                            <i class="fas fa-file-import"></i> Importar Datos
-                        </button>
-                        <button class="btn btn-outline backup-btn" id="backupBtn">
-                            <i class="fas fa-cloud-upload-alt"></i> Respaldar en la Nube
-                        </button>
-                        <button class="btn btn-outline backup-btn" id="restoreBtn">
-                            <i class="fas fa-cloud-download-alt"></i> Restaurar desde Nube
-                        </button>
-                        <button class="btn btn-outline backup-btn" id="clearDataBtn">
-                            <i class="fas fa-trash"></i> Limpiar Todos los Datos
-                        </button>
-                    </div>
-                </div>
-            </div>
         </div>
         
         <div class="main-content">
             <div class="card">
                 <header>
                     <h1>TaskFlow Plus</h1>
-                    <p class="subtitle">Tu gestor de tareas avanzado con guardado automático</p>
+                    <p class="subtitle">Tu gestor de tareas avanzado</p>
                     <button class="theme-toggle" id="themeToggle">
                         <i class="fas fa-moon"></i>
                     </button>
@@ -884,57 +756,10 @@
             </div>
         </div>
     </div>
-
-    <!-- Modal para importar datos -->
-    <div class="modal" id="importModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Importar Datos</h3>
-                <button class="modal-close" id="closeImportModal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p>Pega aquí los datos exportados previamente:</p>
-                <textarea class="import-textarea" id="importData" placeholder='Pega aquí el contenido del archivo JSON exportado...'></textarea>
-                <p class="help-text" style="margin-top: 10px; font-size: 0.9rem; color: var(--gray);">
-                    <i class="fas fa-info-circle"></i> Esto reemplazará todos tus datos actuales.
-                </p>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-outline" id="cancelImport">Cancelar</button>
-                <button class="btn btn-primary" id="confirmImport">Importar</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal para confirmar limpieza -->
-    <div class="modal" id="clearDataModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Confirmar Limpieza</h3>
-                <button class="modal-close" id="closeClearModal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p style="color: var(--danger); font-weight: 600;">
-                    <i class="fas fa-exclamation-triangle"></i> ¡ADVERTENCIA!
-                </p>
-                <p>Estás a punto de eliminar todos tus datos. Esta acción no se puede deshacer.</p>
-                <p>¿Estás seguro de que quieres continuar?</p>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-outline" id="cancelClear">Cancelar</button>
-                <button class="btn btn-danger" id="confirmClear">Eliminar Todo</button>
-            </div>
-        </div>
-    </div>
     
     <button class="mobile-menu-btn" id="mobileMenuBtn">
         <i class="fas fa-bars"></i>
     </button>
-
-    <div class="save-status" id="saveStatus">
-        <i class="fas fa-check-circle"></i>
-        <span>Datos guardados</span>
-    </div>
 
     <script>
         // Variables globales
@@ -949,7 +774,6 @@
         let currentFilter = 'all';
         let currentCategory = 'all';
         let searchQuery = '';
-        let autoSaveTimeout = null;
 
         // Elementos del DOM
         const taskInput = document.getElementById('taskInput');
@@ -970,26 +794,6 @@
         const highPriorityTasksEl = document.getElementById('highPriorityTasks');
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
         const themeToggle = document.getElementById('themeToggle');
-        const saveStatus = document.getElementById('saveStatus');
-        
-        // Elementos de backup
-        const exportBtn = document.getElementById('exportBtn');
-        const importBtn = document.getElementById('importBtn');
-        const backupBtn = document.getElementById('backupBtn');
-        const restoreBtn = document.getElementById('restoreBtn');
-        const clearDataBtn = document.getElementById('clearDataBtn');
-        
-        // Elementos de modales
-        const importModal = document.getElementById('importModal');
-        const closeImportModal = document.getElementById('closeImportModal');
-        const cancelImport = document.getElementById('cancelImport');
-        const confirmImport = document.getElementById('confirmImport');
-        const importData = document.getElementById('importData');
-        
-        const clearDataModal = document.getElementById('clearDataModal');
-        const closeClearModal = document.getElementById('closeClearModal');
-        const cancelClear = document.getElementById('cancelClear');
-        const confirmClear = document.getElementById('confirmClear');
 
         // Inicializar la aplicación
         document.addEventListener('DOMContentLoaded', () => {
@@ -1025,232 +829,7 @@
             addCategoryBtn.addEventListener('click', addNewCategory);
             mobileMenuBtn.addEventListener('click', toggleMobileMenu);
             themeToggle.addEventListener('click', toggleTheme);
-            
-            // Event listeners para backup
-            exportBtn.addEventListener('click', exportData);
-            importBtn.addEventListener('click', () => importModal.style.display = 'flex');
-            backupBtn.addEventListener('click', backupToCloud);
-            restoreBtn.addEventListener('click', restoreFromCloud);
-            clearDataBtn.addEventListener('click', () => clearDataModal.style.display = 'flex');
-            
-            // Event listeners para modales
-            closeImportModal.addEventListener('click', () => importModal.style.display = 'none');
-            cancelImport.addEventListener('click', () => importModal.style.display = 'none');
-            confirmImport.addEventListener('click', importDataFromText);
-            
-            closeClearModal.addEventListener('click', () => clearDataModal.style.display = 'none');
-            cancelClear.addEventListener('click', () => clearDataModal.style.display = 'none');
-            confirmClear.addEventListener('click', clearAllData);
-            
-            // Cerrar modales al hacer clic fuera
-            window.addEventListener('click', (e) => {
-                if (e.target === importModal) importModal.style.display = 'none';
-                if (e.target === clearDataModal) clearDataModal.style.display = 'none';
-            });
-            
-            // Mostrar estado de guardado inicial
-            showSaveStatus('Los datos se cargaron correctamente', 'success');
         });
-
-        // ========== FUNCIONES DE GUARDADO ==========
-
-        // Función para guardar con retardo (debounce)
-        function scheduleSave() {
-            // Cancelar guardado anterior si existe
-            if (autoSaveTimeout) {
-                clearTimeout(autoSaveTimeout);
-            }
-            
-            // Mostrar estado "guardando"
-            showSaveStatus('Guardando...', 'saving');
-            
-            // Programar guardado después de 1 segundo
-            autoSaveTimeout = setTimeout(() => {
-                saveAllData();
-                showSaveStatus('Datos guardados', 'success');
-            }, 1000);
-        }
-
-        // Función para guardar todos los datos
-        function saveAllData() {
-            try {
-                localStorage.setItem('tasks', JSON.stringify(tasks));
-                localStorage.setItem('categories', JSON.stringify(categories));
-                localStorage.setItem('lastBackup', new Date().toISOString());
-                console.log('Datos guardados correctamente');
-                return true;
-            } catch (error) {
-                console.error('Error al guardar datos:', error);
-                showSaveStatus('Error al guardar', 'error');
-                return false;
-            }
-        }
-
-        // Función para mostrar estado de guardado
-        function showSaveStatus(message, type) {
-            const icon = saveStatus.querySelector('i');
-            const text = saveStatus.querySelector('span');
-            
-            text.textContent = message;
-            saveStatus.className = 'save-status';
-            
-            switch (type) {
-                case 'success':
-                    saveStatus.style.background = 'var(--success)';
-                    icon.className = 'fas fa-check-circle';
-                    break;
-                case 'saving':
-                    saveStatus.style.background = 'var(--warning)';
-                    icon.className = 'fas fa-sync-alt fa-spin';
-                    break;
-                case 'error':
-                    saveStatus.style.background = 'var(--danger)';
-                    icon.className = 'fas fa-exclamation-circle';
-                    break;
-            }
-            
-            saveStatus.classList.add('show');
-            
-            // Ocultar después de 3 segundos (excepto para estado "guardando")
-            if (type !== 'saving') {
-                setTimeout(() => {
-                    saveStatus.classList.remove('show');
-                }, 3000);
-            }
-        }
-
-        // Función para exportar datos
-        function exportData() {
-            const data = {
-                tasks: tasks,
-                categories: categories,
-                exportDate: new Date().toISOString(),
-                version: '1.0'
-            };
-            
-            const dataStr = JSON.stringify(data, null, 2);
-            const dataBlob = new Blob([dataStr], { type: 'application/json' });
-            
-            const url = URL.createObjectURL(dataBlob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `taskflow-backup-${new Date().toISOString().split('T')[0]}.json`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-            
-            showNotification('Datos exportados correctamente', 'success');
-        }
-
-        // Función para importar datos desde texto
-        function importDataFromText() {
-            try {
-                const data = JSON.parse(importData.value);
-                
-                if (!data.tasks || !data.categories) {
-                    throw new Error('Formato de datos inválido');
-                }
-                
-                // Confirmar reemplazo
-                if (!confirm('¿Estás seguro de que quieres reemplazar todos tus datos actuales? Esta acción no se puede deshacer.')) {
-                    return;
-                }
-                
-                tasks = data.tasks;
-                categories = data.categories;
-                
-                saveAllData();
-                renderTasks();
-                updateStats();
-                renderCategories();
-                renderUpcomingTasks();
-                
-                importModal.style.display = 'none';
-                importData.value = '';
-                
-                showNotification('Datos importados correctamente', 'success');
-            } catch (error) {
-                showNotification('Error al importar datos: ' + error.message, 'danger');
-            }
-        }
-
-        // Función para respaldar en la nube (simulado)
-        function backupToCloud() {
-            showSaveStatus('Subiendo a la nube...', 'saving');
-            
-            // Simular subida a la nube
-            setTimeout(() => {
-                try {
-                    // En una aplicación real, aquí harías una petición a tu servidor
-                    localStorage.setItem('cloudBackup', JSON.stringify({
-                        tasks: tasks,
-                        categories: categories,
-                        backupDate: new Date().toISOString()
-                    }));
-                    
-                    showSaveStatus('Respaldo en la nube completado', 'success');
-                    showNotification('Datos respaldados en la nube correctamente', 'success');
-                } catch (error) {
-                    showSaveStatus('Error en respaldo', 'error');
-                    showNotification('Error al respaldar en la nube', 'danger');
-                }
-            }, 2000);
-        }
-
-        // Función para restaurar desde la nube (simulado)
-        function restoreFromCloud() {
-            try {
-                const cloudData = localStorage.getItem('cloudBackup');
-                
-                if (!cloudData) {
-                    showNotification('No hay datos respaldados en la nube', 'warning');
-                    return;
-                }
-                
-                const data = JSON.parse(cloudData);
-                
-                if (!confirm('¿Estás seguro de que quieres restaurar los datos desde la nube? Esto reemplazará tus datos actuales.')) {
-                    return;
-                }
-                
-                tasks = data.tasks;
-                categories = data.categories;
-                
-                saveAllData();
-                renderTasks();
-                updateStats();
-                renderCategories();
-                renderUpcomingTasks();
-                
-                showNotification('Datos restaurados desde la nube correctamente', 'success');
-            } catch (error) {
-                showNotification('Error al restaurar desde la nube', 'danger');
-            }
-        }
-
-        // Función para limpiar todos los datos
-        function clearAllData() {
-            tasks = [];
-            categories = [
-                { id: 'personal', name: 'Personal', color: '#8b5cf6' },
-                { id: 'work', name: 'Trabajo', color: '#3b82f6' },
-                { id: 'study', name: 'Estudio', color: '#10b981' },
-                { id: 'health', name: 'Salud', color: '#ef4444' },
-                { id: 'other', name: 'Otros', color: '#6b7280' }
-            ];
-            
-            saveAllData();
-            renderTasks();
-            updateStats();
-            renderCategories();
-            renderUpcomingTasks();
-            
-            clearDataModal.style.display = 'none';
-            showNotification('Todos los datos han sido eliminados', 'info');
-        }
-
-        // ========== FUNCIONES EXISTENTES (modificadas para incluir guardado) ==========
 
         // Función para agregar una nueva tarea
         function addTask() {
@@ -1273,7 +852,7 @@
             };
             
             tasks.unshift(newTask);
-            scheduleSave(); // Usar guardado programado
+            saveTasks();
             renderTasks();
             updateStats();
             renderUpcomingTasks();
@@ -1290,7 +869,7 @@
         function deleteTask(id) {
             if (confirm('¿Estás seguro de que quieres eliminar esta tarea?')) {
                 tasks = tasks.filter(task => task.id !== id);
-                scheduleSave(); // Usar guardado programado
+                saveTasks();
                 renderTasks();
                 updateStats();
                 renderUpcomingTasks();
@@ -1307,7 +886,7 @@
                 return task;
             });
             
-            scheduleSave(); // Usar guardado programado
+            saveTasks();
             renderTasks();
             updateStats();
             renderUpcomingTasks();
@@ -1331,37 +910,11 @@
                     return t;
                 });
                 
-                scheduleSave(); // Usar guardado programado
+                saveTasks();
                 renderTasks();
                 showNotification('Tarea actualizada', 'info');
             }
         }
-
-        // Función para agregar una nueva categoría
-        function addNewCategory() {
-            const categoryName = prompt('Nombre de la nueva categoría:');
-            if (categoryName && categoryName.trim() !== '') {
-                const newCategory = {
-                    id: categoryName.toLowerCase().replace(/\s+/g, '-'),
-                    name: categoryName.trim(),
-                    color: getRandomColor()
-                };
-                
-                categories.push(newCategory);
-                scheduleSave(); // Usar guardado programado
-                renderCategories();
-                
-                // Actualizar el select de categorías
-                const option = document.createElement('option');
-                option.value = newCategory.id;
-                option.textContent = newCategory.name;
-                categorySelect.appendChild(option);
-                
-                showNotification('Categoría agregada', 'success');
-            }
-        }
-
-        // ========== FUNCIONES DE RENDERIZADO (sin cambios) ==========
 
         // Función para renderizar las tareas
         function renderTasks() {
@@ -1512,6 +1065,30 @@
             });
         }
 
+        // Función para agregar una nueva categoría
+        function addNewCategory() {
+            const categoryName = prompt('Nombre de la nueva categoría:');
+            if (categoryName && categoryName.trim() !== '') {
+                const newCategory = {
+                    id: categoryName.toLowerCase().replace(/\s+/g, '-'),
+                    name: categoryName.trim(),
+                    color: getRandomColor()
+                };
+                
+                categories.push(newCategory);
+                saveCategories();
+                renderCategories();
+                
+                // Actualizar el select de categorías
+                const option = document.createElement('option');
+                option.value = newCategory.id;
+                option.textContent = newCategory.name;
+                categorySelect.appendChild(option);
+                
+                showNotification('Categoría agregada', 'success');
+            }
+        }
+
         // Función para actualizar las estadísticas
         function updateStats() {
             const total = tasks.length;
@@ -1525,7 +1102,15 @@
             highPriorityTasksEl.textContent = highPriority;
         }
 
-        // ========== FUNCIONES AUXILIARES (sin cambios) ==========
+        // Función para guardar tareas en localStorage
+        function saveTasks() {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        // Función para guardar categorías en localStorage
+        function saveCategories() {
+            localStorage.setItem('categories', JSON.stringify(categories));
+        }
 
         // Función para formatear fechas
         function formatDate(dateString) {
@@ -1659,17 +1244,6 @@
                 
                 body.dark-theme .empty-state {
                     color: #9ca3af;
-                }
-                
-                body.dark-theme .modal-content {
-                    background: #374151;
-                    color: #e5e7eb;
-                }
-                
-                body.dark-theme .import-textarea {
-                    background: #4b5563;
-                    border-color: #6b7280;
-                    color: #e5e7eb;
                 }
             </style>
         `;
